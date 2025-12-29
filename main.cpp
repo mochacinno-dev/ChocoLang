@@ -389,6 +389,7 @@ public:
     size_t current;
     
     bool inFunction;
+    bool inLoop;
     bool hasReturned;
     Value returnValue;
     bool shouldBreak;
@@ -399,7 +400,7 @@ public:
     static const std::unordered_map<std::string, bool> builtinFunctions;
 
     Interpreter(const std::vector<Token>& toks) : tokens(toks), current(0), 
-        inFunction(false), hasReturned(false), shouldBreak(false), 
+        inFunction(false), inLoop(false), hasReturned(false), shouldBreak(false), 
         shouldContinue(false), inTryCatch(false) {
         scopes.push_back(std::unordered_map<std::string, Value>());
         scopes.reserve(16);
@@ -496,13 +497,13 @@ public:
         } else if (match(TOKEN_THROW)) {
             throwStatement();
         } else if (match(TOKEN_BREAK)) {
-            if (!inFunction) {
+            if (!inLoop) {
                 throw RuntimeError("'break' can only be used inside loops", tokens[current - 1].line);
             }
             shouldBreak = true;
             match(TOKEN_SEMICOLON);
         } else if (match(TOKEN_CONTINUE)) {
-            if (!inFunction) {
+            if (!inLoop) {
                 throw RuntimeError("'continue' can only be used inside loops", tokens[current - 1].line);
             }
             shouldContinue = true;
@@ -581,6 +582,9 @@ public:
         
         size_t bodyEnd = current - 1;
         functions[name.value] = {std::move(params), bodyStart, bodyEnd};
+        
+        // Store function name as a variable so it can be referenced
+        setVariable(name.value, Value(name.value));
     }
 
     void structDeclaration() {
@@ -884,6 +888,9 @@ public:
             if (braceCount > 0) bodyEnd++;
         }
         
+        bool wasInLoop = inLoop;
+        inLoop = true;
+        
         while (condition.type == Value::BOOL && condition.boolean && !hasReturned) {
             current = bodyStart;
             shouldBreak = false;
@@ -907,6 +914,7 @@ public:
             expect(TOKEN_LBRACE, "Expected '{' after while condition");
         }
         
+        inLoop = wasInLoop;
         current = bodyEnd + 1;
     }
 
@@ -940,6 +948,9 @@ public:
         int iStart = static_cast<int>(start.num);
         int iEnd = static_cast<int>(end.num);
         
+        bool wasInLoop = inLoop;
+        inLoop = true;
+        
         for (int i = iStart; i < iEnd; i++) {
             if (hasReturned || shouldBreak) break;
             
@@ -966,6 +977,7 @@ public:
             current = savedCurrent;
         }
         
+        inLoop = wasInLoop;
         current = loopBodyEnd + 1;
     }
 

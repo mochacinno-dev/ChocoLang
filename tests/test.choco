@@ -236,25 +236,6 @@ puts arraySum;
 // ============================================
 // 9. Nested Functions and Complex Logic
 // ============================================
-puts "";
-puts "=== Complex Example ===";
-
-fn isPrime(n) {
-    if n <= 1 {
-        return false;
-    }
-    
-    let i = 2;
-    while i < n {
-        let remainder = n % i;
-        if remainder == 0 {
-            return false;
-        }
-        i = i + 1;
-    }
-    return true;
-}
-
 puts "Prime numbers 2-20:";
 for i in 2..21 {
     let prime = isPrime(i);
