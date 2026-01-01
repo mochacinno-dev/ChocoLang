@@ -1,5 +1,5 @@
 //////////////////////////////////////
-// ChocoLang 0.5.0 - Nutty Nougat
+// ChocoLang 0.6.0 - Almond Amour
 // CoffeeShop Development
 // Made by Camila "Mocha" Rose
 //////////////////////////////////////
@@ -19,6 +19,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <functional>
+#include "choco_gui.h"
 
 // Token types
 enum TokenType {
@@ -1642,6 +1643,29 @@ public:
             }
         }
 
+        ChocoGUI* gui = ChocoGUI::getInstance(0, nullptr);
+        gui->setInterpreter(this);
+
+        if (name == "gui_init") return gui->gui_init(args, callLine);
+        if (name == "gui_window") return gui->gui_window(args, callLine);
+        if (name == "gui_button") return gui->gui_button(args, callLine);
+        if (name == "gui_label") return gui->gui_label(args, callLine);
+        if (name == "gui_entry") return gui->gui_entry(args, callLine);
+        if (name == "gui_box") return gui->gui_box(args, callLine);
+        if (name == "gui_add") return gui->gui_add(args, callLine);
+        if (name == "gui_set_text") return gui->gui_set_text(args, callLine);
+        if (name == "gui_get_text") return gui->gui_get_text(args, callLine);
+        if (name == "gui_on") return gui->gui_on(args, callLine);
+        if (name == "gui_show") return gui->gui_show(args, callLine);
+        if (name == "gui_run") return gui->gui_run(args, callLine);
+        if (name == "gui_quit") return gui->gui_quit(args, callLine);
+        if (name == "gui_checkbox") return gui->gui_checkbox(args, callLine);
+        if (name == "gui_textview") return gui->gui_textview(args, callLine);
+        if (name == "gui_frame") return gui->gui_frame(args, callLine);
+        if (name == "gui_separator") return gui->gui_separator(args, callLine);
+        if (name == "gui_set_sensitive") return gui->gui_set_sensitive(args, callLine);
+        if (name == "gui_get_checked") return gui->gui_get_checked(args, callLine);
+        if (name == "gui_set_checked") return gui->gui_set_checked(args, callLine);
         // User-defined functions
         auto it = functions.find(name);
         if (it == functions.end()) {
@@ -1820,10 +1844,17 @@ const std::unordered_map<std::string, bool> Interpreter::builtinFunctions = {
     {"split", true}, {"join", true},
     {"read_file", true}, {"write_file", true}, {"append_file", true}, {"file_exists", true},
     {"map", true}, {"filter", true}, {"reduce", true}, {"typeof", true},
-    {"input", true}
+    {"input", true}, {"gui_init", true}, {"gui_window", true}, {"gui_button", true},
+    {"gui_label", true}, {"gui_entry", true}, {"gui_box", true},
+    {"gui_add", true}, {"gui_set_text", true}, {"gui_get_text", true},
+    {"gui_on", true}, {"gui_show", true}, {"gui_run", true},
+    {"gui_quit", true}, {"gui_checkbox", true}, {"gui_textview", true},
+    {"gui_frame", true}, {"gui_separator", true}, {"gui_set_sensitive", true},
+    {"gui_get_checked", true}, {"gui_set_checked", true}
 };
 
 int main(int argc, char* argv[]) {
+    ChocoGUI::getInstance(argc, argv);
     if (argc == 1) {
         std::cout << "======================================" << std::endl;
         std::cout << "  ChocoLang 0.5.0 - Nutty Nougat" << std::endl;

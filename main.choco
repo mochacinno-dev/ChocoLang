@@ -77,11 +77,11 @@ puts "20. Input Functionality - DONE";
 puts "";
 
 puts "<=== Version 0.5.5 - Hazelnut Heaven Patch ===>";
-puts "21. Testing framework";
+puts "21. Testing framework - DONE";
 puts "";
 
 puts "<=== Version 0.6.0 - Almond Amour ===>";
-puts "22. Package manager";
+puts "22. GUI Library";
 puts "";
 
 puts "<=== Version 0.6.5 - Macadamia Magic Patch ===>";
